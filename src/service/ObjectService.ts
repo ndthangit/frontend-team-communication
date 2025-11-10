@@ -1,49 +1,7 @@
 import {type ErrorHandlers, request} from "../api.tsx";
-import type {Team, User} from '../types';
-import type {CreateTeamRequest} from "../types/team.ts";
+import type { User} from '../types';
 import type {AxiosResponse} from "axios";
-
-export const teamService = {
-    getTeamsByUserEmail: (email: string): Promise<Team[]> => { // Sửa từ Promise<never> thành Promise<Team[]>
-        return new Promise((resolve, reject) => {
-            request(
-                "GET",
-                `/v1/get-all-unit-by-organization/${email}`,
-                (res) => {
-                    resolve(res.data);
-                },
-                {
-                    rest: (error) => {
-                        reject(error);
-                    },
-                    noResponse: (error) => {
-                        reject(error);
-                    }
-                }
-            );
-        });
-    },
-    createTeam: (teamData: CreateTeamRequest): Promise<any> => {
-        return new Promise((resolve, reject) => {
-            request(
-                "POST",
-                "/v1/create-unit",
-                (res) => {
-                    return resolve(res.data);
-                },
-                {
-                    rest: (error) => {
-                        reject(error);
-                    },
-                    noResponse: (error) => {
-                        reject(error);
-                    }
-                },
-                teamData
-            );
-        });
-    },
-}
+import type {Team} from "../types/team.ts";
 
 export async function createPerson(
     personData: User,
@@ -67,6 +25,32 @@ export async function getPersonInfoByEmail(
     return request(
         'GET',
         `/v1/get-person-by-email/?email=${email}`,
+        successHandler,
+        errorHandlers
+    );
+}
+
+export async function getTeamsByUserEmail(
+    email: string,
+    successHandler?: (response: AxiosResponse<Team[]>) => void,
+    errorHandlers?: ErrorHandlers
+): Promise<AxiosResponse<Team[]> | void> {
+    return request(
+        'GET',
+        `/v1/get-team-by-email/?email=${email}`,
+        successHandler,
+        errorHandlers
+    );
+}
+
+export async function getVisibleTeamsByUserEmail(
+    email: string,
+    successHandler?: (response: AxiosResponse<Team[]>) => void,
+    errorHandlers?: ErrorHandlers
+): Promise<AxiosResponse<Team[]> | void> {
+    return request(
+        'GET',
+        `/v1/get-visible-team-by-email/?email=${email}`,
         successHandler,
         errorHandlers
     );

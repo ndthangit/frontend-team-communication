@@ -177,35 +177,3 @@ export async function getTeamById(
     );
 }
 
-/**
- * Tạo hoặc cập nhật thông tin cá nhân
- */
-export async function createPerson(
-    personData: any,
-    successHandler?: (response: AxiosResponse<any>) => void,
-    errorHandlers?: ErrorHandlers
-): Promise<AxiosResponse<any> | void> {
-    return request(
-        'POST',
-        '/v1/create-person',
-        successHandler,
-        errorHandlers,
-        personData
-    );
-}
-
-/**
- * Lấy thông tin người dùng theo email
- */
-export async function getPersonInfo(
-    email: string,
-    successHandler?: (response: AxiosResponse<any>) => void,
-    errorHandlers?: ErrorHandlers
-): Promise<AxiosResponse<any> | void> {
-    return request(
-        'GET',
-        `/v1/get-info/${email}`,
-        successHandler,
-        errorHandlers
-    );
-}

@@ -1,5 +1,5 @@
 // SideBar.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Bell,
     MessageSquare,
@@ -12,6 +12,7 @@ import {
     Plus,
     MoreHorizontal
 } from 'lucide-react';
+import {useLocation, useNavigate} from "react-router-dom";
 
 // Biến kích thước để dễ dàng chỉnh sửa
 const SIDEBAR_CONFIG = {
@@ -28,22 +29,30 @@ interface MenuItem {
     id: string;
     label: string;
     icon: React.ReactNode;
+    path: string
 }
 
 const menuItems: MenuItem[] = [
-    { id: 'activity', label: 'Hoạt động', icon: <Bell size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'chat', label: 'Trò chuyện', icon: <MessageSquare size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'teams', label: 'Nhóm', icon: <Users size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'tasks', label: 'Nhiệm vụ', icon: <Briefcase size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'calendar', label: 'Lịch Outlook', icon: <Calendar size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'calls', label: 'Các Cuộc gọi', icon: <Phone size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'clipchamp', label: 'Clipchamp', icon: <Layers size={SIDEBAR_CONFIG.ICON_SIZE} /> },
-    { id: 'onedrive', label: 'OneDrive', icon: <Cloud size={SIDEBAR_CONFIG.ICON_SIZE} /> },
+    { id: 'activity', label: 'Hoạt động', icon: <Bell size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/activity' },
+    { id: 'chat', label: 'Trò chuyện', icon: <MessageSquare size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/chat' },
+    { id: 'teams', label: 'Nhóm', icon: <Users size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/teams' },
+    { id: 'tasks', label: 'Nhiệm vụ', icon: <Briefcase size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/tasks' },
+    { id: 'calendar', label: 'Lịch Outlook', icon: <Calendar size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/calendar' },
+    { id: 'calls', label: 'Các Cuộc gọi', icon: <Phone size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/calls' },
+    { id: 'clipchamp', label: 'Clipchamp', icon: <Layers size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/clipchamp' },
+    { id: 'onedrive', label: 'OneDrive', icon: <Cloud size={SIDEBAR_CONFIG.ICON_SIZE} />, path: '/onedrive' },
 ];
 
 export default function Sidebar() {
-    const [activeItem, setActiveItem] = useState('teams');
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    // Tự động xác định activeItem dựa trên URL hiện tại
+    const activeItem = menuItems.find(item => location.pathname.startsWith(item.path))?.id || 'teams';
+
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
     return (
         <div
             className="h-full bg-gray-100 flex flex-col border-r border-gray-300 fixed left-0 top-16 z-10"
@@ -61,7 +70,7 @@ export default function Sidebar() {
                     {menuItems.map((item) => (
                         <button
                             key={item.id}
-                            onClick={() => setActiveItem(item.id)}
+                            onClick={() => handleNavigation(item.path)}
                             className={`
                                 w-full flex items-center justify-center transition-all duration-200 relative group
                                 ${activeItem === item.id ? 'bg-transparent' : 'hover:bg-gray-200'}

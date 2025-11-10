@@ -1,11 +1,3 @@
-export interface Team {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: Date;
-  avatarUrl?: string;
-}
-
 export interface User {
   id: string;
   email: string;

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@tailwind utilities;
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 /* Styles for HomePage */

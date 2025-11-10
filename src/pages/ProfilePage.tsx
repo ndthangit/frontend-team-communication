@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 import { Save, User as UserIcon } from 'lucide-react';
 import type { AxiosResponse } from 'axios';
-import { createPerson } from '../api';
 import './ProfilePage.css';
 import type { User } from "../types";
 import UserInfo from '../components/UserInfo';
+import {createPerson} from "../service/ObjectService.ts";
 
 const ProfilePage: React.FC = () => {
     const navigate = useNavigate();

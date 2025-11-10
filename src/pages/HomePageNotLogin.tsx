@@ -6,15 +6,12 @@ import {useKeycloak} from "@react-keycloak/web";
 const HomePageNotLogin: React.FC = () => {
     const { keycloak } = useKeycloak();
 
-
-
     const handleLogin = () => {
         keycloak.login()
     };
 
     const handleSignup = () => {
-        // Xử lý đăng ký - có thể thêm logic sau
-        console.log('Navigate to signup');
+        keycloak.register()
     };
 
     return (

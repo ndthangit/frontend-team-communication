@@ -4,7 +4,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useNavigate } from 'react-router-dom';
 import HomePageNotLogin from "./HomePageNotLogin.tsx";
 import type { User } from "../types";
-import { getPersonInfoByEmail } from "../service/ObjectService.ts";
+import {getPersonInfoByEmail} from "../service/ObjectService.ts";
 import { User as UserIcon, LogOut, Users, Video, Settings } from 'lucide-react';
 
 const HomePage: React.FC = () => {
@@ -20,6 +20,7 @@ const HomePage: React.FC = () => {
                 if (keycloak.tokenParsed?.email) {
                     try {
                         const res = await getPersonInfoByEmail(keycloak.tokenParsed.email);
+
                         if ( res?.data.id) {
                             // Tìm thấy người dùng trong DB
                             const userData = res.data;
@@ -29,6 +30,8 @@ const HomePage: React.FC = () => {
                             // Đã xác thực nhưng không có trong DB -> chuyển đến trang profile
                             navigate('/profile');
                         }
+
+
                     } catch (error) {
                         console.error("Lỗi khi lấy thông tin người dùng:", error);
                         // Gặp lỗi cũng chuyển đến trang profile
