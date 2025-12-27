@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './slices/userSlice';
 import teamReducer from './slices/teamSlice';
 import postReducer from './slices/postSlice';
 import conversationReducer from './slices/conversationSlice';
@@ -9,7 +8,6 @@ import uiReducer from './slices/uiSlice';
 
 export const store = configureStore({
     reducer: {
-        user: userReducer,
         team: teamReducer,
         post: postReducer,
         conversation: conversationReducer,

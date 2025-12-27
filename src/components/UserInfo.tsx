@@ -52,7 +52,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ user, onInputChange }) => {
                     type="date"
                     id="dateOfBirth"
                     name="dateOfBirth"
-                    value={user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : ''}
+                    value={user.dateOfBirth || ''}
                     onChange={onInputChange}
                 />
             </div>
@@ -69,17 +69,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ user, onInputChange }) => {
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                 </select>
-            </div>
-            <div className="form-group">
-                <label htmlFor="phoneNumber">Phone Number</label>
-                <input
-                    type="tel"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={user.phoneNumber}
-                    onChange={onInputChange}
-                    placeholder="0123456789"
-                />
             </div>
             <div className="form-group">
                 <label htmlFor="occupation">Occupation</label>

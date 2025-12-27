@@ -2,43 +2,40 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
-    phoneNumber?: string;
-    dateOfBirth?: Date;
-    address?: string;
+    dateOfBirth: string;
+    address: string;
     avatarUrl?: string;
-    gender?: string;
-    occupation?: string;
+    gender: string;
+    occupation: string;
     status?: 'online' | 'offline' | 'busy' | 'away';
 }
 
 export interface Channel {
-  id: string;
-  teamId: string;
-  name: string;
-  description?: string;
+    id: string;
+    teamId: string;
+    name: string;
+    description?: string;
 }
 
 export interface FileItem {
-  id: string;
-  name: string;
-  type: 'file' | 'folder';
-  size?: number;
-  modifiedAt: Date;
-  path: string;
-  parentId?: string;
+    id: string;
+    name: string;
+    type: 'file' | 'folder';
+    size?: number;
+    modifiedAt: Date;
+    path: string;
+    parentId?: string;
 }
 
 export interface Post {
     id: string;
-    teamId: string;
+    groupId: string;
     channelId?: string;
-    authorEmail: string;
-    author: User;
+    author: User | null;
     content: string;
-    createdAt: Date;
+    createdAt?: Date;
     likes: number;
     comments: Comment[];
-    attachments?: string[];
 }
 
 export interface Comment {

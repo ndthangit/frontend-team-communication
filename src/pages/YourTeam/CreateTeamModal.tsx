@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { createTeam } from "../../service/TeamService.ts";
+import { createTeam, getTeam } from "../../service/TeamService.ts";
 
 interface CreateTeamModalProps {
     isOpen: boolean;
@@ -13,23 +13,7 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ isOpen, onClos
 
     if (!isOpen) return null;
 
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     if (!teamName.trim()) {
-    //         alert('Vui lòng nhập tên nhóm');
-    //         return;
-    //     }
-    //
-    //     try {
-    //         await createTeam(teamName.trim());
-    //         onSubmit(teamName.trim());
-    //         setTeamName(''); // Reset form
-    //         onClose(); // Đóng modal sau khi submit
-    //     } catch (error) {
-    //         console.error('Lỗi khi tạo nhóm:', error);
-    //         alert('Có lỗi xảy ra khi tạo nhóm. Vui lòng thử lại.');
-    //     }
-    // };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!teamName.trim()) {
@@ -39,6 +23,12 @@ export const CreateTeamModal: React.FC<CreateTeamModalProps> = ({ isOpen, onClos
 
         try {
             await createTeam(teamName.trim());
+            const resGroup = await getTeam();
+            if (resGroup?.data) {
+                const teamData = resGroup.data;
+                localStorage.setItem('groupInfo', JSON.stringify(teamData));
+            }
+
             onSubmit(teamName.trim()); // Chỉ truyền name, parent sẽ xử lý refresh
             setTeamName('');
             // onClose() sẽ được gọi từ parent sau khi fetchTeams() hoàn thành

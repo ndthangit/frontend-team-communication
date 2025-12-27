@@ -5,7 +5,8 @@ import { Save, User as UserIcon } from 'lucide-react';
 import './ProfilePage.css';
 import type { User } from "../types";
 import UserInfo from '../components/UserInfo';
-import {createUser, getUserInfoByEmail, updateUser} from "../service/UserService.ts";
+import { createUser, getUserInfoByEmail, updateUser } from "../service/UserService.ts";
+import { getCurrentUser, setCurrentUser } from '../utils/localStorage';
 
 const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
@@ -19,34 +20,34 @@ const ProfilePage: React.FC = () => {
         firstName: '',
         lastName: '',
         email: '',
+        dateOfBirth: '',
+        address: '',
         gender: '',
-        dateOfBirth: undefined,
-        occupation: undefined
+        occupation: ''
     });
 
     useEffect(() => {
         const loadUserInfo = async () => {
             try {
-                const savedUserInfo = localStorage.getItem('userInfo');
+                // Ưu tiên lấy từ currentUser trong localStorage
+                const currentUser = getCurrentUser();
 
-                if (savedUserInfo) {
-                    // Có dữ liệu trong localStorage -> dùng dữ liệu đã lưu
-                    const userData = JSON.parse(savedUserInfo);
-                    setUserInfo(prev => ({
-                        ...prev,
-                        ...userData,
-                        email: userData.email || keycloak.tokenParsed?.email || '',
-                        firstName: userData.firstName || keycloak.tokenParsed?.given_name || '',
-                        lastName: userData.lastName || keycloak.tokenParsed?.family_name || '',
-                    }));
+                if (currentUser) {
+                    // Có currentUser -> dùng dữ liệu đã lưu
+                    setUserInfo({
+                        ...currentUser,
+                        email: currentUser.email || keycloak.tokenParsed?.email || '',
+                        firstName: currentUser.firstName || keycloak.tokenParsed?.given_name || '',
+                        lastName: currentUser.lastName || keycloak.tokenParsed?.family_name || '',
+                    });
                 } else {
-                    // Không có dữ liệu trong localStorage -> gọi API lấy dữ liệu
+                    // Không có currentUser -> gọi API lấy dữ liệu
                     const res = await getUserInfoByEmail();
                     if (res?.data) {
                         // Tìm thấy người dùng trong DB
                         const userData = res.data;
                         setUserInfo(userData);
-                        localStorage.setItem('userInfo', JSON.stringify(userData));
+                        setCurrentUser(userData); // Lưu vào localStorage
                     } else {
                         // Không tìm thấy người dùng trong DB -> giữ nguyên form trống để tạo mới
                         setUserInfo(prev => ({
@@ -89,14 +90,14 @@ const ProfilePage: React.FC = () => {
         setSuccess(null);
 
         try {
-            const savedUserInfo = localStorage.getItem('userInfo');
+            const currentUser = getCurrentUser();
             let action;
 
-            if (savedUserInfo) {
-                // Có dữ liệu trong localStorage -> dùng API update
+            if (currentUser) {
+                // Có currentUser -> dùng API update
                 action = updateUser;
             } else {
-                // Không có dữ liệu trong localStorage -> dùng API create
+                // Không có currentUser -> dùng API create
                 action = createUser;
             }
 
@@ -104,8 +105,8 @@ const ProfilePage: React.FC = () => {
                 userInfo,
                 () => {
                     setSuccess('Profile updated successfully!');
-                    // Cập nhật localStorage sau khi thành công
-                    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                    // Cập nhật currentUser trong localStorage sau khi thành công
+                    setCurrentUser(userInfo);
                     setTimeout(() => {
                         navigate('/');
                     }, 1500);

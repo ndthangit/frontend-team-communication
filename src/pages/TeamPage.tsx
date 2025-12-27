@@ -16,6 +16,7 @@ export const TeamPage: React.FC = () => {
             try {
                 // CÁCH 1: Lấy từ LocalStorage (nhanh, đồng bộ với Grid)
                 const savedGroupInfo = localStorage.getItem('groupInfo');
+
                 if (savedGroupInfo) {
                     const teams: Team[] = JSON.parse(savedGroupInfo);
                     const foundTeam = teams.find(t => t.id === teamId);
@@ -43,7 +44,7 @@ export const TeamPage: React.FC = () => {
     }, [teamId]);
 
     const handleBack = () => {
-        navigate('/team'); // Quay lại trang danh sách
+        navigate('/teams'); // Quay lại trang danh sách
     };
 
     if (loading) return <div className="p-8">Đang tải dữ liệu lớp học...</div>;
