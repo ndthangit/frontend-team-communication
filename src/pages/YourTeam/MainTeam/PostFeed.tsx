@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { PenSquare } from 'lucide-react';
 import { PostCard } from './PostCard';
-import type {Post} from "../../../types";
-import {CreatePostModal} from "./Feed/CreatePostModal.tsx";
+import type { Post, Comment } from "../../../types";
+import { CreatePostModal } from "./Feed/CreatePostModal.tsx";
 import { getPostsAsync } from "../../../service/PostService.ts"; // Sử dụng hàm mới
 
 interface PostFeedProps {
@@ -47,6 +47,17 @@ export const PostFeed: React.FC<PostFeedProps> = ({ teamId, channelId }) => {
         setPosts(prevPosts => [enhancedPost, ...prevPosts]);
     };
 
+    // Xử lý khi comment được thêm
+    const handleCommentAdded = (postId: string, comment: Comment) => {
+        setPosts(prevPosts =>
+            prevPosts.map(post =>
+                post.id === postId
+                    ? { ...post, comments: [...(post.comments || []), comment] }
+                    : post
+            )
+        );
+    };
+
     return (
         <div className="flex-1 overflow-y-auto bg-gray-50">
             <div className="max-w-4xl mx-auto py-6 px-6">
@@ -79,7 +90,13 @@ export const PostFeed: React.FC<PostFeedProps> = ({ teamId, channelId }) => {
                                 likes: post.likes || 0,
                                 author: post.author || null
                             };
-                            return <PostCard key={post.id} post={safePost}/>;
+                            return (
+                                <PostCard
+                                    key={post.id}
+                                    post={safePost}
+                                    onCommentAdded={handleCommentAdded}
+                                />
+                            );
                         })
                     )}
                 </div>

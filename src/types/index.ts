@@ -38,13 +38,17 @@ export interface Post {
     comments: Comment[];
 }
 
+export type CommentEventType = 'CREATED' | 'UPDATED' | 'DELETED';
+
 export interface Comment {
     id: string;
-    postId: string;
-    authorEmail: string;
-    author: User;
+    eventType?: CommentEventType;
+    author: User | null;
+    postId: string | null;  // Nếu null thì đây là comment trả lời cho comment khác
+    parentId: string | null;  // ID của comment cha nếu đây là reply
     content: string;
-    createdAt: Date;
+    createdAt: Date | number;  // Có thể là timestamp (long) hoặc Date
+    replies?: Comment[];  // Danh sách replies (computed on frontend)
 }
 
 export interface Call {

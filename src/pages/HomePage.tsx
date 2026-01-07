@@ -5,15 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import HomePageNotLogin from "./HomePageNotLogin.tsx";
 import type { User } from "../types";
 import { User as UserIcon, LogOut, Users, Video, Settings } from 'lucide-react';
-import {getUserInfoByEmail} from "../service/UserService.ts";
-import {getTeam} from "../service/TeamService.ts";
+import { getUserInfoByEmail } from "../service/UserService.ts";
+import { getTeam } from "../service/TeamService.ts";
+import { TeamGrid } from './YourTeam/TeamGrid.tsx';
 
 const HomePage: React.FC = () => {
     const { keycloak, initialized } = useKeycloak();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true); // Bắt đầu với trạng thái đang tải
     const [userInfo, setUserInfo] = useState<User | null>(null);
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchUserInfo = async () => {
         // Chỉ chạy khi keycloak đã khởi tạo và người dùng đã đăng nhập
@@ -23,12 +24,12 @@ const HomePage: React.FC = () => {
         if (savedUserInfo == null) {
             try {
                 const res = await getUserInfoByEmail();
-                if(saveGroupInfo == null){
+                if (saveGroupInfo == null) {
                     const resGroup = await getTeam();
                     localStorage.setItem('groupInfo', JSON.stringify(resGroup?.data));
                 }
 
-                if ( res?.data) {
+                if (res?.data) {
                     // Tìm thấy người dùng trong DB
                     const userData = res.data;
                     setUserInfo(userData);
@@ -76,48 +77,9 @@ const HomePage: React.FC = () => {
     if (!keycloak.authenticated) {
         return <HomePageNotLogin />;
     }
-
-    // --- Giao diện cho người dùng đã đăng nhập ---
-    return (
-        <div className="dashboard-container">
-            <header className="dashboard-header">
-                <div className="logo">
-                    <Video className="logo-icon" />
-                    <span className="logo-text">TeamsMeet</span>
-                </div>
-                <div className="header-user-menu">
-                    <span>Chào, {userInfo?.firstName || keycloak.tokenParsed?.preferred_username}</span>
-                    <UserIcon className="user-avatar-icon" />
-                    <button onClick={handleLogout} className="btn-logout">
-                        <LogOut size={18} />
-                        Đăng xuất
-                    </button>
-                </div>
-            </header>
-            <main className="dashboard-main">
-                <h1 className="dashboard-welcome">Chào mừng trở lại!</h1>
-                <p className="dashboard-subtitle">Bắt đầu cuộc họp hoặc quản lý nhóm của bạn từ đây.</p>
-
-                <div className="dashboard-cards">
-                    <div className="card" onClick={() => navigate('/main')}>
-                        <Video size={40} className="card-icon" />
-                        <h3 className="card-title">Tạo cuộc họp mới</h3>
-                        <p className="card-description">Bắt đầu một cuộc gọi video ngay lập tức.</p>
-                    </div>
-                    <div className="card" onClick={() => navigate('/teams')}>
-                        <Users size={40} className="card-icon" />
-                        <h3 className="card-title">Quản lý nhóm</h3>
-                        <p className="card-description">Xem và chỉnh sửa các nhóm của bạn.</p>
-                    </div>
-                    <div className="card" onClick={() => navigate('/profile')}>
-                        <Settings size={40} className="card-icon" />
-                        <h3 className="card-title">Cài đặt tài khoản</h3>
-                        <p className="card-description">Cập nhật thông tin cá nhân của bạn.</p>
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
+    else {
+        navigate('/teams');
+    }
 };
 
 export default HomePage;

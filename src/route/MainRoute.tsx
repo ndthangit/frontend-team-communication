@@ -23,7 +23,7 @@ const MainRouter = () => {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route element={<LayoutRoute />}>
-                    <Route path="/dashboard" element={<div> Page</div>} />
+                    {/* <Route path="/dashboard" element={<div> Page</div>} /> */}
                     <Route path="/teams" element={
                         <ProtectedRoute>
                             <TeamGrid />
